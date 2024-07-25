@@ -11,6 +11,24 @@
   </head>
 
   <body>
+     <% if flash[:notice] %>
+     
+        <%= flash[:notice] %>
+
+    <% end %>
+
+    <% if flash[:alert] %>
+  
+        <%= flash[:alert] %>
+
+    <% end %>
+
+    <% if flash[:error] %>
+
+        <%= flash[:error] %>
+
+    <% end %>
+     <%= render 'layouts/header' %>
     <%= yield %>
   </body>
 </html>

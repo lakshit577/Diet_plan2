@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_24_133004) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_25_135740) do
   create_table "customer_products", force: :cascade do |t|
-    t.integer "product_id", null: false
+    t.integer "product_id"
     t.integer "customer_id", null: false
     t.integer "qty", null: false
     t.datetime "created_at", null: false

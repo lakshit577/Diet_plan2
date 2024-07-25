@@ -1,0 +1,30 @@
+
+<%= form_with url: customer_products_path(id: params[:format]), method: :post do %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Products</th>
+        <th>Select</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @owner_products.each do |owner_product| %>
+        <tr>
+          <td><%= owner_product.product.name %></td>
+          <td>
+            <%= check_box_tag "owner_product_ids[]", owner_product.id, false, id: "owner_product_#{owner_product.id}" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div class="form-group">
+    <%= label_tag :quantity, "Quantity for single day" %>
+    <%= number_field_tag :quantity, nil, min: 0, step: 1, id: "quantity" %>
+  </div>
+
+  <%= submit_tag "Submit" %>
+<% end %>
+
+

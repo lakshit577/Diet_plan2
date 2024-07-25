@@ -1,5 +1,5 @@
 class OwnerProductsController < ApplicationController
-  def index
-    @owner_products = OwnerProduct.all  
+  def show   
+    @owner_products = OwnerProduct.where(owner_id: current_user.id)
   end
 end

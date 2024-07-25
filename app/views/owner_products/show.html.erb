@@ -1,0 +1,17 @@
+ <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Products</th>
+        <th>qty</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @owner_products.each do |owner_product| %>
+        <tr>
+          <td><%= owner_product.product.name %></td>
+          <td><%= owner_product.qty %></td>
+          
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
