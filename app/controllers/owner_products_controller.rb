@@ -1,0 +1,2 @@
+class OwnerProductsController < ApplicationController
+end
