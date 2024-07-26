@@ -6,7 +6,7 @@
     <%= link_to "my shop products", owner_product_path(current_user)%>
   <% end %>
   
-  <%= "Current_user ROLE :- " + current_user.role%>
+  <%= "Current_user ROLE :- " + current_user.role  + "  and email  : -" +current_user.email %>
   <br>
   <%= link_to 'My Products', customer_product_path(current_user)%>
   <%= button_to 'Logout', destroy_user_session_path, method: :delete %>

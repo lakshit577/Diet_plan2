@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  product: one
+  owner: one
+  date: 2024-07-26
+  qty: 1
+
+two:
+  product: two
+  owner: two
+  date: 2024-07-26
+  qty: 1

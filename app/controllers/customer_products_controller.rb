@@ -4,6 +4,7 @@ class CustomerProductsController < ApplicationController
   end
 
   def create
+    # debugger
    if CustomerProduct.all.where(customer_id: current_user.id ) !=[]
     flash[:notice] = "already_present."
     redirect_to home_index_path
@@ -17,7 +18,7 @@ class CustomerProductsController < ApplicationController
       CustomerProduct.create!(
           product_id: nil,
           customer_id:current_user.id,
-          qty: quantity
+          qty: 5
         )
     end
     if selected_ids.size > 3
