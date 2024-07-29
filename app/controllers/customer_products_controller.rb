@@ -41,7 +41,6 @@ class CustomerProductsController < ApplicationController
     redirect_to home_index_path # Change to the desired path after creation
   end
   def show
-    
     @customer_products = CustomerProduct.where(customer_id: current_user.id)
   end
 end

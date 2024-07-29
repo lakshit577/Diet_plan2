@@ -1,0 +1,41 @@
+<%= button_to "genrate plan" ,genrate_plan_owner_products_path ,method: :post%>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Week Plans</title>
+
+</head>
+<body>
+  <div class="container mt-4">
+    <h1 class="mb-4">Weekly Plans</h1>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Day</th>
+          <% @customers.each do |customer_id| %>
+            <th>Customer <%= customer_id %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @days.each do |day| %>
+          <tr>
+            <td><%= day.capitalize %></td>
+            <% @customers.each do |customer_id| %>
+              <td>
+                <% plan = @week_plans_by_day[day].find { |p| p.customer_id == customer_id } %>
+                <% if plan %>
+                  <%= "#{Product.find(plan.product_id).name}" %>               
+                  <%= CustomerProduct.find_by(customer_id:customer_id).qty %>               
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

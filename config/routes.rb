@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   get 'home/index'
   devise_for :users
-  resources :owner_products
+  resources :owner_products do 
+    post "genrate_plan" ,on: :collection
+  end
   resources :customer_products
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

@@ -1,16 +1,21 @@
- <table class="table table-striped">
-    <thead>
+<table class="table table-striped">
+  <thead>
+    <tr>
+     
+      <th>Product Name</th>
+      <th>Total Qty</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @results.each do |result| %>
       <tr>
-        <th>Products</th>
-        <th>qty</th>
+        <%if @current_day.downcase == result.day%>
+
+        
+        <td><%= Product.find(result.product_id).name %></td>
+        <td><%= result.total_qty %></td>
+        <%end%>
       </tr>
-    </thead>
-    <tbody>
-      <% @owner_products.each do |owner_product| %>
-        <tr>
-          <td><%= owner_product.product.name %></td>
-          <td><%= owner_product.qty %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+    <% end %>
+  </tbody>
+</table>

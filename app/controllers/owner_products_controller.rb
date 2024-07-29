@@ -1,180 +1,75 @@
-# class OwnerProductsController < ApplicationController
-#   def show   
-#     @owner_products = OwnerProduct.where(owner_id: current_user.id)
-#     # debugger
-#     days_in_week = Date::DAYNAMES.size
-#     # current_day = Date.today.strftime("%A")
-#     current_day = "Sunday"
-#     distinct_product_ids = CustomerProduct.where.not(product_id: nil).pluck(:product_id).uniq.count
-#     product_qty_hash = CustomerProduct.where.not(product_id: nil).group(:product_id).sum(:qty)
-#     product_id_count_hash = CustomerProduct.where.not(product_id: nil).group(:product_id).count.sort_by { |product_id, count| -count }.to_h 
-#     values_array = product_id_count_hash.values
-#     keys_array = product_id_count_hash.keys
-#     if CustomerProduct.all != []
-#     days_in_week.times do
-     
-#       if current_day == "Monday"
-#         product_id = keys_array.first
-#         remaining_users = User.where(role: "customer").count - values_array.first
-#         qty = product_qty_hash[product_id]
-#         if OwnerProduct.exists?(product_id: product_id)
-#           OwnerProduct.where.not(product_id: product_id).update_all(qty: 0)
-#           OwnerProduct.where(product_id: product_id).update(qty: qty + 5 * remaining_users)
-#         end
-#       end
-      
-#       if current_day == "Tuesday"
-#         product_id = keys_array[1]  # Note: index 1 for second element
-#         remaining_users = User.where(role: "customer").count - values_array[1]
-#         qty = product_qty_hash[product_id]
-#         if OwnerProduct.exists?(product_id: product_id)
-#           OwnerProduct.where.not(product_id: product_id).update_all(qty: 0)
-#           OwnerProduct.where(product_id: product_id).update(qty: qty + 5 * remaining_users)
-#         end
-#       end
-      
-#       if current_day == "Wednesday"
-#         product_id = keys_array[2]  # Note: index 2 for third element
-#         remaining_users = User.where(role: "customer").count - values_array[2]
-#         qty = product_qty_hash[product_id]
-#         if OwnerProduct.exists?(product_id: product_id)
-#           OwnerProduct.where.not(product_id: product_id).update_all(qty: 0)
-#           OwnerProduct.where(product_id: product_id).update(qty: qty + 5 * remaining_users)
-#         end
-#       end
-      
-#       if current_day == "Thursday"
-#         product_id = keys_array[3]  # Note: index 3 for fourth element
-#         remaining_users = User.where(role: "customer").count - values_array[3]
-#         qty = product_qty_hash[product_id]
-#         if OwnerProduct.exists?(product_id: product_id)
-#           OwnerProduct.where.not(product_id: product_id).update_all(qty: 0)
-#           OwnerProduct.where(product_id: product_id).update(qty: qty + 5 * remaining_users)
-#         end
-#       end
-      
-#       if current_day == "Friday"
-#         product_id = keys_array[4]  # Note: index 4 for fifth element
-#         remaining_users = User.where(role: "customer").count - values_array[4]
-#         qty = product_qty_hash[product_id]
-#         if OwnerProduct.exists?(product_id: product_id)
-#           OwnerProduct.where.not(product_id: product_id).update_all(qty: 0)
-#           OwnerProduct.where(product_id: product_id).update(qty: qty + 5 * remaining_users)
-#         end
-#       end
-      
-#       if current_day == "Saturday"
-#         product_id = keys_array[5]  # Note: index 5 for sixth element
-#         remaining_users = User.where(role: "customer").count - values_array[5]
-#         qty = product_qty_hash[product_id]
-#         if OwnerProduct.exists?(product_id: product_id)
-#           OwnerProduct.where.not(product_id: product_id).update_all(qty: 0)
-#           OwnerProduct.where(product_id: product_id).update(qty: qty + 5 * remaining_users)
-#         end
-#       end
-#       if product_id_count_hash.count > 7  
-
-
-#       if current_day == "Sunday"
-#         debugger
-#         User.where(role: "customer").count
-#         product_id = keys_array[6] 
-#         qty = product_qty_hash[product_id]
-#         if OwnerProduct.exists?(product_id: product_id)
-#           OwnerProduct.where.not(product_id: product_id).update_all(qty: 0)
-#           OwnerProduct.where(product_id: product_id).update(qty: qty)
-#         end
-
-#         product_id = keys_array[7]  
-#         remaining_users = User.where(role: "customer").count - values_array[7]
-#         qty = product_qty_hash[product_id]
-#         if OwnerProduct.exists?(product_id: product_id)
-#           OwnerProduct.where(product_id: product_id).update(qty: qty + 5 * (remaining_users - 1))
-#         end
-#       end
-#     end
-#     end
-#   end
-#   end
-# end
-
 class OwnerProductsController < ApplicationController
-  def show
-    @owner_products = OwnerProduct.where(owner_id: current_user.id)
-    @products = Product.all.map { |p| { id: p.id, name: p.name } }
-    @customers = User.where(role: "customer")
-
-    # Generate weekly plan
-    weekly_plan = generate_weekly_plan
-
-    # Output the weekly plan for debugging purposes
-    puts "Weekly plan:"
-    (0..6).each do |day|
-      daily_products = weekly_plan.select { |day_plan| day_plan[:day] == day }
-      puts "Day #{Date::DAYNAMES[day]}: #{daily_products.map { |plan| plan[:product] }.join(', ')}"
+  def index   
+    @days = %w[monday tuesday wednesday thursday friday saturday sunday]
+    
+    # Group week plans by day and ensure the order
+    @week_plans_by_day = CreateWeekPlan.all.group_by(&:day)
+    @week_plans_by_day = @days.each_with_object({}) do |day, hash|
+      hash[day] = @week_plans_by_day[day] || []
     end
+
+    # Fetch all distinct customer IDs
+    @customers = CreateWeekPlan.distinct.pluck(:customer_id)
+  end
+  def show   
+    @owner_products = OwnerProduct.all
+    # @current_day = Date.today.strftime('%A')
+    @current_day ="Tuesday"
+
+
+  @results = CreateWeekPlan
+  .joins("INNER JOIN customer_products ON customer_products.product_id = create_week_plans.product_id")
+  .group("create_week_plans.day, create_week_plans.product_id")
+  .select("create_week_plans.day, create_week_plans.product_id, SUM(customer_products.qty) AS total_qty")
+
+
+
   end
 
-  private
+  def genrate_plan 
+    # binding.pry
+    distinct_product_ids = CustomerProduct.where.not(product_id: nil).distinct.pluck(:product_id)
+    
+    max_customer_id = CustomerProduct.group(:customer_id) .order('COUNT(product_id) DESC') .count .first .tap { |cust_id, count| User.find(cust_id) }.first
 
-  def generate_weekly_plan
-    # Create a copy of products to avoid modifying the original array
-    products_copy = @products.dup
-
-    # Create a weekly plan
-    weekly_plan = []
-    days_with_extra_products = []
-
-    # Randomly assign products to each day
-    7.times do |day|
-      if products_copy.empty?
-        break
+    products_ids = CustomerProduct.where(customer_id: max_customer_id).pluck(:product_id) 
+    products_ids.sort!
+    7.times do |i|
+      if(products_ids.include?(distinct_product_ids[i]))
+         
+      else
+        products_ids.push(distinct_product_ids[i])
       end
-
-      product = products_copy.sample
-      weekly_plan << { day: day, product: product[:name] }
-      products_copy.delete(product)
     end
 
-    # If there are more products than days, add remaining products
-    days_with_extra_products = products_copy.map { |product| product[:name] }
+    customer_ids = CustomerProduct.distinct.pluck(:customer_id)
+    customer_ids.each do |customer|
+      customer_product_ids = CustomerProduct.where(customer_id: customer).pluck(:product_id)
+      customer_product_ids.sort!
+      if(customer_product_ids.first.nil?)
+        i = 0
+        (products_ids ).each do |id|
+          week_plan = CreateWeekPlan.find_or_create_by(day: i, product_id: id, customer_id: customer)
 
-    # Add remaining products to the plan, with some days getting multiple products
-    days_with_extra_products.each_with_index do |product, index|
-      day = index % 7
-      weekly_plan << { day: day, product: product }
-    end
-
-    # Ensure each customer's bucket products are available in the weekly plan
-    @customers.each do |customer|
-      customer_bucket = customer.diet_plans.map { |dp| dp[:product] }
-      customer_bucket.each do |product|
-        unless weekly_plan.any? { |day_plan| day_plan[:product] == product }
-          # Ensure no duplicates in the weekly plan
-          weekly_plan << { day: weekly_plan.size % 7, product: product }
+          i= i+1
+        end
+      else
+        i = 0
+        product_id_not =(customer_product_ids - products_ids)
+        product_id_not.each do |id|
+          CreateWeekPlan.find_or_create_by(day: i, product_id: id, customer_id: customer)
+          i= i+1
+        end
+        a = Marshal.load(Marshal.dump(products_ids))
+        product_id_not.each do |p|
+          a.shift()
+        end
+        (a).each do |id|
+          CreateWeekPlan.find_or_create_by(day: i, product_id: id, customer_id: customer)
+          i= i+1
         end
       end
     end
-
-    # Update OwnerProduct quantities based on the weekly plan
-    update_owner_products(weekly_plan)
-
-    weekly_plan
-  end
-
-  def update_owner_products(weekly_plan)
-    product_count = weekly_plan.group_by { |day_plan| day_plan[:product] }.transform_values(&:count)
-
-    product_count.each do |product_name, count|
-      product_id = Product.find_by(name: product_name).id
-      remaining_users = @customers.count
-
-      if OwnerProduct.exists?(product_id: product_id)
-        OwnerProduct.where.not(product_id: product_id).update_all(qty: 0)
-        OwnerProduct.where(product_id: product_id).update(qty: count + 5 * remaining_users)
-      else
-        OwnerProduct.create(product_id: product_id, qty: count + 5 * remaining_users)
-      end
-    end
+    redirect_to owner_products_path() , notice: "genrate scucssfully "
   end
 end

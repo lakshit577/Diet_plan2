@@ -12,7 +12,7 @@
         <tr>
           <td><%= owner_product.product.name %></td>
           <td>
-            <%= check_box_tag "owner_product_ids[]", owner_product.id, false, id: "owner_product_#{owner_product.id}" %>
+            <%= check_box_tag "owner_product_ids[]", owner_product.product_id, false, id: "owner_product_#{owner_product.id}" %>
           </td>
         </tr>
       <% end %>
