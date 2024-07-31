@@ -28,7 +28,7 @@
                 <% plan = @week_plans_by_day[day].find { |p| p.customer_id == customer_id } %>
                 <% if plan %>
                   <%= "#{Product.find(plan.product_id).name}" %>               
-                  <%= CustomerProduct.find_by(customer_id:customer_id).qty %>               
+                  <%=CustomerProduct.find_by(customer_id:customer_id).qty %>               
                 <% end %>
               </td>
             <% end %>

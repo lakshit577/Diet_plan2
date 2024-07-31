@@ -1,0 +1,23 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+    
+      <th>Day</th>
+      <th>Product Name</th>
+  
+    </tr>
+  </thead>
+  <tbody>
+    <% @user_plans.each do |user_plan| %>
+      <tr>
+      
+
+        
+        <td><%= user_plan.day %></td>
+      
+        <td><%= Product.find(user_plan.product_id).name%></td>
+    
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -4,7 +4,7 @@ class CustomerProductsController < ApplicationController
   end
 
   def create
-    # debugger
+
    if CustomerProduct.all.where(customer_id: current_user.id ) !=[]
     flash[:notice] = "already_present."
     redirect_to home_index_path

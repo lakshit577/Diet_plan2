@@ -1,15 +1,33 @@
 <!-- app/views/layouts/_header.html.erb -->
 <% if user_signed_in? %>
+
   <br>
-  
-  <% if current_user.role == "shop_owner" %>
-    <%= link_to "my shop products", owner_product_path(current_user)%>
-  <% end %>
-  
   <%= "Current_user ROLE :- " + current_user.role  + "  and email  : -" +current_user.email %>
   <br>
+
+  <br>
+
+  <% if current_user.role == "shop_owner" %>
+    <%= link_to "weekly plan",owner_products_path%>
+  <br>
+    <%= link_to "products to buy today", owner_product_path(current_user)%>
+  <br>
+  
+  <% end %>
+  
   <%= link_to 'My Products', customer_product_path(current_user)%>
   <%= button_to 'Logout', destroy_user_session_path, method: :delete %>
-<% else %>
-  <%= link_to 'Login', new_user_session_path %>
+
+  <br>
 <% end %>
+
+
+
+
+
+
+
+
+
+
+

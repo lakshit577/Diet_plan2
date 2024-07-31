@@ -3,5 +3,9 @@ class HomeController < ApplicationController
   def index
     # debugger
     @users = User.where(role: :shop_owner)
+
+    
   end
+
+ 
 end
